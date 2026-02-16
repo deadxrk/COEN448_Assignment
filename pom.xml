@@ -10,13 +10,13 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Using a conservative release level keeps the project compatible with more graders/CI setups -->
+    
     <maven.compiler.release>17</maven.compiler.release>
     <junit.jupiter.version>5.10.2</junit.jupiter.version>
   </properties>
 
   <dependencies>
-    <!-- JUnit 5 (only) -->
+    
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -44,3 +44,4 @@
     </plugins>
   </build>
 </project>
+
