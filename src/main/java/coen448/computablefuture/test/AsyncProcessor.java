@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class AsyncProcessor {
 
-    // Given code (unchanged)
+    // Given code 
     public CompletableFuture<String> processAsync(List<Microservice> microservices, String message) {
 
         List<CompletableFuture<String>> futures = microservices.stream()
@@ -23,7 +23,7 @@ public class AsyncProcessor {
                         .collect(Collectors.joining(" ")));
     }
 
-    // Given code (unchanged) — used to observe nondeterministic completion order
+    // Given code used to observe nondeterministic completion order
     public CompletableFuture<List<String>> processAsyncCompletionOrder(
             List<Microservice> microservices, String message) {
 
@@ -39,16 +39,7 @@ public class AsyncProcessor {
                 .thenApply(v -> completionOrder);
     }
 
-    // ----------------------------
-    // Assignment: Policy methods
-    // ----------------------------
-
-    /**
-     * Task A — Fail-Fast (Atomic Policy)
-     * - Uses CompletableFuture.allOf
-     * - Propagates exceptions
-     * - No partial result returned
-     */
+    //Task A — Fail-Fast (Atomic Policy)
     public CompletableFuture<String> processAsyncFailFast(
             List<Microservice> services,
             List<String> messages) {
@@ -65,19 +56,14 @@ public class AsyncProcessor {
                         .collect(Collectors.joining(" ")));
     }
 
-    /**
-     * Task B — Fail-Partial (Best-Effort Policy)
-     * - Handles failures per service
-     * - Returns successful results only
-     * - No exception escapes to the caller
-     */
+    //Task B — Fail-Partial
     public CompletableFuture<List<String>> processAsyncFailPartial(
             List<Microservice> services,
             List<String> messages) {
 
         validateServicesAndMessages(services, messages);
 
-        // Turn each call into a "never-throw" future: failures become null.
+        // Turn each call into a "never-throw" future so that failures become null
         List<CompletableFuture<String>> safeFutures = IntStream.range(0, services.size())
                 .mapToObj(i -> services.get(i).retrieveAsync(messages.get(i))
                         .handle((value, ex) -> ex == null ? value : null))
@@ -90,12 +76,7 @@ public class AsyncProcessor {
                         .collect(Collectors.toList()));
     }
 
-    /**
-     * Task C — Fail-Soft (Fallback Policy)
-     * - Uses fallback values for failures
-     * - Always completes normally
-     * - Must document risks of masking failures (in docs/failure-semantics.md)
-     */
+    //Task C — Fail-Soft
     public CompletableFuture<String> processAsyncFailSoft(
             List<Microservice> services,
             List<String> messages,
@@ -104,7 +85,7 @@ public class AsyncProcessor {
         validateServicesAndMessages(services, messages);
         Objects.requireNonNull(fallbackValue, "fallbackValue");
 
-        // Convert failures into fallback values so the aggregate never fails.
+        // Convert failures into fallback values so the aggregate never fails
         List<CompletableFuture<String>> safeFutures = IntStream.range(0, services.size())
                 .mapToObj(i -> services.get(i).retrieveAsync(messages.get(i))
                         .exceptionally(ex -> fallbackValue))
