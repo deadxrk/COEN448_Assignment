@@ -14,10 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AsyncProcessorTest {
 
-    // ----------------------------
-    // Helpers (Mockito-free fakes)
-    // ----------------------------
-
+    // Helpers
     private static Microservice successService(String fixedResult) {
         return new Microservice("success") {
             @Override
@@ -36,10 +33,7 @@ public class AsyncProcessorTest {
         };
     }
 
-    // ----------------------------
-    // Given behavior tests (kept)
-    // ----------------------------
-
+    // Given behavior tests 
     @RepeatedTest(5)
     void testProcessAsyncSuccess_fixedServices() throws Exception {
         Microservice s1 = successService("Hello");
@@ -84,7 +78,7 @@ public class AsyncProcessorTest {
                 .processAsyncCompletionOrder(List.of(s1, s2, s3), "msg")
                 .get(1, TimeUnit.SECONDS);
 
-        // Observed (not asserted) nondeterministic order
+        // Observed nondeterministic order
         System.out.println(order);
 
         assertEquals(3, order.size());
@@ -93,10 +87,8 @@ public class AsyncProcessorTest {
         assertTrue(order.stream().anyMatch(x -> x.startsWith("C:")));
     }
 
-    // ----------------------------
-    // Required policy tests (PDF)
-    // ----------------------------
 
+    // Required policy tests
     @Test
     void failFast_failurePropagates() {
         AsyncProcessor processor = new AsyncProcessor();
