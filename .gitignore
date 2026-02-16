@@ -1,0 +1,10 @@
+# Maven build output
+/target/
+
+# Eclipse / IDE metadata
+.classpath
+.project
+.settings/
+
+# Clover coverage output
+.clover/
